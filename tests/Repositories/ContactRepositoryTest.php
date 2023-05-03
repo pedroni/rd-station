@@ -69,7 +69,7 @@ test('find contact', function () {
     );
 });
 
-test('deletes contact', function (array $body, int $status) {
+test('deletes contact', function (array $body, int $status, int $count) {
     $this->mockConfig();
 
     Http::fake([
@@ -87,7 +87,7 @@ test('deletes contact', function (array $body, int $status) {
             ->toThrow(RequestException::class);
     }
 
-    Http::assertSentCount(1);
+    Http::assertSentCount($count);
 
     Http::assertSent(
         fn (
@@ -98,9 +98,9 @@ test('deletes contact', function (array $body, int $status) {
             ->url()->toBe('https://api.rd.services/platform/contacts/email:email@example.com')
     );
 })->with([
-    [[], 204],
-    [[], 404],
-    [[], 500],
+    [[], 204, 1],
+    [[], 404, 3],
+    [[], 500, 3],
 ]);
 
 test('sync tags on contact', function () {
